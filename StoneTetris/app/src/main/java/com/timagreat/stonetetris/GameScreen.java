@@ -1,6 +1,7 @@
 package com.timagreat.stonetetris;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class GameScreen extends GLScreen {
         super(game); //Переоприделяет класс game,в libGDX является абстрактным и предоставляет для использования реализацию ApplicationListener, наряду со вспомогательными методами для обработки визуализации экрана.
         batcher = new SpriteBatcher(glGraphics, 360);//Сколько максимально спрайтов буферезировать;
         guiCam = new Camera2D(glGraphics, 16, 24);//Фиксирует игровой мир 16(по X) на 24(по Y);
-        world = new com.timagreat.stonetetris.World();//Создает новый екземпляр World;
+        world = new com.timagreat.stonetetris.World((Context)game);//Создает новый екземпляр World;
         state = GAME_RUNNING;//Присваивает состоянию константу запущено;
         dd = new DebugDraw(glGraphics);
 
@@ -74,7 +75,6 @@ public class GameScreen extends GLScreen {
 
     //Метод обновления касания************
     void updateRunning(float deltaTime) {
-
         if (com.timagreat.stonetetris.World.state == com.timagreat.stonetetris.World.STATE_GAME_OVER) { //Если классе World состояние равно константе game over, тогда game over присваивается константе состояния етого класса;
             state = GAME_OVER;
             return;
@@ -87,32 +87,21 @@ public class GameScreen extends GLScreen {
 
             if (touch.type == TouchEvent.TOUCH_DOWN) {//Если тип елемента совпадает с константой Touch Down(Нажатие)
                 touchPoint.set(touch.x, touch.y);     //touch point - Точка контакта с поверхностью.Тогда в вектор передаем координаты
-                guiCam.touchToWorld(touchPoint);      //ну апотом в камеру передаем вектор с координатами;
-                if (OverlapTester
-                        .pointInRectangle(world.turnButton, touchPoint)) {//Проверка, если точка прикосновения(Вектор)оказивается на кнопке(прямоугольнике), повернуть фигуру,
+                guiCam.touchToWorld(touchPoint);      //ну а потом в камеру передаем вектор с координатами;
+                if (OverlapTester.pointInRectangle(world.turnButton, touchPoint)) {//Проверка, если точка прикосновения(Вектор)оказивается на кнопке(прямоугольнике), повернуть фигуру,
                     com.timagreat.stonetetris.FactoryShape.turnShape(world.shape, world.field);     //Тогда запускаем метод поворота фигуры описаного в класе FactoryShape, и вносим туда фигуру и поле с класса World;
-
-
                 }
-                if (OverlapTester.pointInRectangle(world.moveRightButton,//То же самое и с кнопкой в право;
-                        touchPoint)) {
+                if (OverlapTester.pointInRectangle(world.moveRightButton, touchPoint)) { //То же самое и с кнопкой в право;
                     com.timagreat.stonetetris.FactoryShape.moveRightShape(world.shape, world.field);
-
                 }
-                if (OverlapTester.pointInRectangle(world.moveLeftButton,//То же самое и с кнопкой в лево;
-                        touchPoint)) {
-
+                if (OverlapTester.pointInRectangle(world.moveLeftButton, touchPoint)) { //То же самое и с кнопкой в лево;
                     com.timagreat.stonetetris.FactoryShape.moveLeftShape(world.shape, world.field);
-
                 }
-                if (OverlapTester.pointInRectangle(world.fieldScreen,//То же самое и при нажатиии на поле игровое;
-                        touchPoint)) {
+                if (OverlapTester.pointInRectangle(world.fieldScreen, touchPoint)) { //То же самое и при нажатиии на поле игровое;
                     world.fallShape();//Запускается метод падения в world;
                 }
-                if (OverlapTester
-                        .pointInRectangle(world.downButton, touchPoint)) {//При нажатии на кнопку быстрее;
+                if (OverlapTester.pointInRectangle(world.downButton, touchPoint)) { //При нажатии на кнопку быстрее;
                     world.fasterDown();//Запускается метод ускорения падения;
-
                 }
 
             }
@@ -250,8 +239,7 @@ public class GameScreen extends GLScreen {
             for (int j = 0; j < com.timagreat.stonetetris.World.FIELD_WIDTH; j++) {
                 if (world.field[i][j] != null) {         //Если ета точка не null
                     text = com.timagreat.stonetetris.FactoryShape.setColor(world.field[i][j].color);//Задаем ей цвет
-                    batcher.drawSprite(j - 2 + 0.5f, i + 0.5f + 1, 1, 1, text,//Потом прорисовываем фигуру
-                            1f);
+                    batcher.drawSprite(j - 2 + 0.5f, i + 0.5f + 1, 1, 1, text, 1f); //Потом прорисовываем фигуру
                 }
             }
         }
@@ -259,15 +247,13 @@ public class GameScreen extends GLScreen {
         Square[] shape = world.shape.getArray(); //Берем фигуру и розбываем ее данные на масив;
         text = com.timagreat.stonetetris.FactoryShape.setColor(shape[0].color);//В текстурах выбераем цвет по цвету первого елеиента фигуры;
         for (int i = 0; i < shape.length; i++) { //В цикле прорисовываем все елементы, ориентируясь на елементы и на цвет;
-            batcher.drawSprite(shape[i].position.x, shape[i].position.y, 1, 1,
-                    text, 1f);
+            batcher.drawSprite(shape[i].position.x, shape[i].position.y, 1, 1, text, 1f);
         }
 
         Square[] miniShape = world.miniShape;//Тут все то же самое только с мими фигурками;
         text = com.timagreat.stonetetris.FactoryShape.setColor(miniShape[0].color);
         for (int i = 0; i < 4; i++) {
-            batcher.drawSprite(miniShape[i].position.x,
-                    miniShape[i].position.y, 0.7f, 0.7f, text, 1);
+            batcher.drawSprite(miniShape[i].position.x, miniShape[i].position.y, 0.7f, 0.7f, text, 1);
         }
 
     }

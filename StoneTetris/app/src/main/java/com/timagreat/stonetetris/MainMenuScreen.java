@@ -1,6 +1,10 @@
 package com.timagreat.stonetetris;
 
 
+import android.content.Context;
+import android.media.MediaPlayer;
+import android.util.Log;
+
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -19,6 +23,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.timagreat.stonetetris.ResultScreen;
 
 public class MainMenuScreen extends GLScreen{
+    private final String TAG = "ST | MainMenuScreen";
 
     Camera2D  guiCam;//Объявляем камеру
     SpriteBatcher batcher;//Предназначен для отрисовки текстур, регионов текстур и спрайтов;
@@ -40,12 +45,11 @@ public class MainMenuScreen extends GLScreen{
 
     @Override
     public void update(float deltaTime) {
+        Log.v(TAG, "Update mainMenuScreen");
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
         game.getInput().getKeyEvents();
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
-
-
             TouchEvent touch = touchEvents.get(i);
 
             if (touch.type == TouchEvent.TOUCH_DOWN) {
@@ -80,26 +84,15 @@ public class MainMenuScreen extends GLScreen{
         gl.glDisable(GL10.GL_TEXTURE_2D);
     }
 
-
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
-
     }
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
-
     }
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-
     }
-
     public void fuck() {
-        // TODO Auto-generated method stub
-
     }
-
 }

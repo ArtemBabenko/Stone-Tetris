@@ -1,5 +1,7 @@
 package com.timagreat.stonetetris;
 
+import android.media.MediaPlayer;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import com.badlogic.androidgames.framework.Screen;
@@ -22,11 +24,10 @@ public class Tetris extends GLGame {
         new com.timagreat.stonetetris.Settings(getApplicationContext());
         if (firstTimeCreate == false) {
             com.timagreat.stonetetris.Assets.load(this);
-            firstTimeCreate = true;
             com.timagreat.stonetetris.Settings.load();
+            firstTimeCreate = true;
         } else {
             com.timagreat.stonetetris.Assets.reload();
         }
     }
-
 }

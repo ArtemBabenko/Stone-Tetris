@@ -186,7 +186,6 @@ public abstract class GLGame extends Activity implements Game, Renderer {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-
 		if ((keyCode == KeyEvent.KEYCODE_BACK ||   keyCode == KeyEvent.KEYCODE_HOME)) {
 			System.out.println(screen.getClass().getSimpleName());
 			if (screen.getClass().getSimpleName().equals("GameScreen")) {

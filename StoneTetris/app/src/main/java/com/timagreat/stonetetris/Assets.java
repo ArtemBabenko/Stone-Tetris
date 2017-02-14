@@ -23,6 +23,7 @@ public class Assets {
     static TextureRegion blueLight;
     static TextureRegion gameOver;
     static TextureRegion exit;
+
     public static void load(GLGame game){
         atlas = new Texture(game,"atlas.png");
         backgroundGameOver = new Texture(game,"gameover.png");
@@ -30,7 +31,11 @@ public class Assets {
         startScreen = new Texture(game,"startScreen2.png");
         result = new Texture(game,"result.png");
 
-        startScreenRegion = new TextureRegion(startScreen,0,0,320,480);
+        /*
+            All sizes of resources such as bitmap(texture) yoy should get from resource itself or
+            hardcode it in dimens.xml
+         */
+        startScreenRegion = new TextureRegion(startScreen,0,0,320,480); // why not startScreen.width, startScreen.height ?
         resultScreenRegion = new TextureRegion(result,0,0,320,480);
         backgroundGameOverRegion = new TextureRegion(backgroundGameOver,0,0,320,480);
         background = new TextureRegion(atlas,0,0,320,480);

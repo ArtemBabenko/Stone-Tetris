@@ -1,11 +1,13 @@
 package com.timagreat.stonetetris;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+
 import java.util.Random;
 import com.badlogic.androidgames.framework.math.Rectangle;
 import com.badlogic.androidgames.framework.math.Vector2;
 
 public class World {
-
     com.timagreat.stonetetris.Square[][] field;//Двухмекрный масив поля;
     com.timagreat.stonetetris.Shape shape;
     com.timagreat.stonetetris.Square[] miniShape;
@@ -41,10 +43,22 @@ public class World {
     private int color = rand.nextInt(4);
 
 
+    private Context mContext;
+    private MediaPlayer mMediaPlayer;
+
     float tickTimeShape = 0;//Переменная куда сохраняется временная константа и сравнивается для задержки;
     float tickTimeShapeInitial =  0.17f;//Задержка перед созданием новой фигуры;
     boolean shapeFall = false; //Переменная идентифицирующая падение фигуры (тоесть она упала или нет/true или folse);
-    public World() {
+
+    /*
+    you need add onDestroy(), onResume() and onPause() to manage mMediaPlayer state
+     */
+
+    public World(Context context) {
+        mContext = context;
+        mMediaPlayer = MediaPlayer.create(context, R.raw.tetris_gameboy_typea);
+        mMediaPlayer.setLooping(true);
+        mMediaPlayer.start();
         field = new com.timagreat.stonetetris.Square[FIELD_HEIGHT][FIELD_WIDTH];
         shape = com.timagreat.stonetetris.FactoryShape.newShape(rand.nextInt(7),rand.nextInt(3));
         score = 0;
@@ -160,6 +174,7 @@ public class World {
 
                 if (fall) {
                     //score+=y/3+levelScore;
+                    playSound(R.raw.line_drop);
                     break;
                 }
                 shape.update(0, -1);//Обновляется фигура каждие -1 шаг;
@@ -225,8 +240,23 @@ public class World {
                 }
                 fill = false;
             }
+            playSound(R.raw.line_remove);
         }
 
+    }
+
+    private void playSound(int id) {
+        final MediaPlayer sound = MediaPlayer.create(mContext, id);
+        sound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                sound.stop();
+                sound.release();
+                mMediaPlayer.start();
+            }
+        });
+        if(mMediaPlayer.isPlaying()) mMediaPlayer.pause();
+        sound.start();
     }
 
     //Метод перезагрузки поля*********
